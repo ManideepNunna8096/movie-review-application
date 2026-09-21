@@ -1,11 +1,11 @@
+import Header from './components/Header'
+import Home from './components/Home'
+
 function App() {
   return (
     <div>
-      <h1>Movie Review Application</h1>
-
-      <p>Discover movies and share your reviews.</p>
-
-      <button>View Movies</button>
+      <Header />
+      <Home />
     </div>
   )
 }
