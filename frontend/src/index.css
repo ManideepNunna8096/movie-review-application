@@ -30,3 +30,10 @@ button {
   padding: 10px 20px;
   cursor: pointer;
 }
+.movie-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 8px;
+  max-width: 300px;
+}
