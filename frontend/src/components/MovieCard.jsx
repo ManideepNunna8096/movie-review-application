@@ -1,12 +1,14 @@
-function MovieCard(props) {
+import { Link } from 'react-router-dom'
 
+function MovieCard(props) {
   return (
     <div className="movie-card">
-
-      <img
-        src={props.movie.poster}
-        alt={props.movie.title}
-      />
+      <Link to={`/movies/${props.movie.imdbId}`}>
+        <img
+          src={props.movie.poster}
+          alt={props.movie.title}
+        />
+      </Link>
 
       <h2>{props.movie.title}</h2>
 
@@ -17,7 +19,6 @@ function MovieCard(props) {
       <p>
         Genres: {props.movie.genres.join(', ')}
       </p>
-
     </div>
   )
 }

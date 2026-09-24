@@ -3,23 +3,37 @@ import { useState, useEffect } from 'react'
 import MovieCard from './MovieCard'
 
 function Home() {
-  const [count, setCount] = useState(0)
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   useEffect(() => {
 
-  const getData = async () => {
+    const getData = async () => {
 
-    const response = await fetch(
-      'http://localhost:8080/api/v1/movies'
-    )
+      try {
 
-    const data = await response.json()
+        const response = await fetch(
+          'http://localhost:8080/api/v1/movies'
+        )
 
-    setMovies(data)
-  }
+        if (!response.ok) {
+          throw new Error('Failed to fetch movies')
+        }
 
-  getData()
+        const data = await response.json()
+
+        setMovies(data)
+        setLoading(false)
+
+      } catch (error) {
+
+        setError(error.message)
+        setLoading(false)
+
+      }
+    }
+
+    getData()
 
   }, [])
   
@@ -29,10 +43,9 @@ function Home() {
       <h1>Movie Review Application</h1>
 
       <p>Discover movies and share your reviews.</p>
-      <p>Likes: {count}</p>
-      <button onClick={() => setCount(count + 1)}>
-        Like
-      </button>
+      {loading && <p>Loading movies...</p>}
+      {error && <p>{error}</p>}
+      
       <div className="movie-grid">
 
         {movies.map((movie) => (
