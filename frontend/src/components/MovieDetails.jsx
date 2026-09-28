@@ -44,41 +44,82 @@ function MovieDetails() {
       {error && <p>{error}</p>}
 
       {movie && (
-        <div className="movie-details">
+        <>
 
-          <div className="movie-details-poster">
+          {/* Large Movie Backdrop */}
 
-            <img
-              src={movie.poster}
-              alt={movie.title}
-            />
+          {movie.backdrops && movie.backdrops.length > 0 && (
+            <div className="movie-backdrop">
+
+              <img
+                src={movie.backdrops[0]}
+                alt={movie.title}
+              />
+
+            </div>
+          )}
+
+          {/* Movie Details */}
+
+          <div className="movie-details">
+
+            <div className="movie-details-poster">
+
+              <img
+                src={movie.poster}
+                alt={movie.title}
+              />
+
+            </div>
+
+            <div className="movie-details-info">
+
+              <h1>{movie.title}</h1>
+
+              <p>
+                <strong>Release Date:</strong> {movie.releaseDate}
+              </p>
+
+              <p>
+                <strong>Genres:</strong> {movie.genres.join(', ')}
+              </p>
+
+              <a
+                className="trailer-button"
+                href={movie.trailerLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ▶ Watch Trailer
+              </a>
+
+            </div>
 
           </div>
 
-          <div className="movie-details-info">
+          {/* Backdrop Gallery */}
 
-            <h1>{movie.title}</h1>
+          {movie.backdrops && movie.backdrops.length > 0 && (
+            <div className="backdrop-gallery">
 
-            <p>
-              <strong>Release Date:</strong> {movie.releaseDate}
-            </p>
+              <h2>Scenes</h2>
 
-            <p>
-              <strong>Genres:</strong> {movie.genres.join(', ')}
-            </p>
+              <div className="backdrop-grid">
 
-            <a
-              className="trailer-button"
-              href={movie.trailerLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ▶ Watch Trailer
-            </a>
+                {movie.backdrops.map((backdrop, index) => (
+                  <img
+                    key={index}
+                    src={backdrop}
+                    alt={`${movie.title} scene ${index + 1}`}
+                  />
+                ))}
 
-          </div>
+              </div>
 
-        </div>
+            </div>
+          )}
+
+        </>
       )}
 
     </main>
