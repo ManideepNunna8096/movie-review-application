@@ -1,10 +1,13 @@
 package nunna.manideep.movies;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -25,5 +28,10 @@ public class ReviewService {
                 .first();
 
         return review;
+    }
+
+    public Optional<Review> getReview(String reviewId) {
+
+        return repository.findById(new ObjectId(reviewId));
     }
 }
