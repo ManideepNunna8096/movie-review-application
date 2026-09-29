@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import Reviews from './Reviews'
 
 function MovieDetails() {
 
@@ -118,6 +119,13 @@ function MovieDetails() {
 
             </div>
           )}
+
+          {/* Reviews */}
+
+          <Reviews
+            imdbId={imdbId}
+            reviewIds={movie.reviewIds}
+          />
 
         </>
       )}
