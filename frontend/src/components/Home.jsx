@@ -22,6 +22,10 @@ function Home() {
 
         const data = await response.json()
 
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid movie data received')
+        }
+
         setMovies(data)
         setLoading(false)
       } catch (error) {
@@ -35,13 +39,15 @@ function Home() {
 
   // Search and genre filtering
   const filteredMovies = movies.filter((movie) => {
-    const matchesSearch = movie.title
+    const title = typeof movie.title === 'string' ? movie.title : ''
+    const genres = Array.isArray(movie.genres) ? movie.genres : []
+    const matchesSearch = title
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
 
     const matchesGenre =
       selectedGenre === 'All' ||
-      movie.genres.includes(selectedGenre)
+      genres.includes(selectedGenre)
 
     return matchesSearch && matchesGenre
   })
@@ -50,10 +56,10 @@ function Home() {
   const sortedMovies = [...filteredMovies].sort((a, b) => {
     switch (sortOption) {
       case 'title-asc':
-        return a.title.localeCompare(b.title)
+        return (a.title || '').localeCompare(b.title || '')
 
       case 'title-desc':
-        return b.title.localeCompare(a.title)
+        return (b.title || '').localeCompare(a.title || '')
 
       case 'date-newest':
         return new Date(b.releaseDate) - new Date(a.releaseDate)
@@ -131,7 +137,7 @@ function Home() {
         {sortedMovies.length > 0 ? (
           sortedMovies.map((movie) => (
             <MovieCard
-              key={movie.imdbId}
+              key={movie.imdbId || movie.id}
               movie={movie}
             />
           ))

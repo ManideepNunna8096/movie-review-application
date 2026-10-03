@@ -92,6 +92,16 @@ button {
   object-fit: cover;
 }
 
+.movie-card-poster-placeholder,
+.movie-details-poster-placeholder {
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  background-color: #f2f2f2;
+  color: #555;
+  font-size: 14px;
+}
+
 .movie-card a {
   display: block;
 }
@@ -132,6 +142,11 @@ button {
   display: block;
   width: min(300px, 100%);
   height: auto;
+  border-radius: 8px;
+}
+
+.movie-details-poster-placeholder {
+  width: min(300px, 100%);
   border-radius: 8px;
 }
 

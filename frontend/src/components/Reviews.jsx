@@ -4,7 +4,9 @@ function Reviews({ imdbId, reviewIds }) {
 
   const [reviewBody, setReviewBody] = useState('')
   const [message, setMessage] = useState('')
-  const [reviews, setReviews] = useState(reviewIds || [])
+  const [reviews, setReviews] = useState(
+    Array.isArray(reviewIds) ? reviewIds : []
+  )
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async (event) => {
@@ -35,6 +37,10 @@ function Reviews({ imdbId, reviewIds }) {
       }
 
       const data = await response.json()
+
+      if (!data || typeof data.body !== 'string') {
+        throw new Error('Invalid review data received')
+      }
 
       setReviews(prevReviews => [...prevReviews, data])
       setReviewBody('')

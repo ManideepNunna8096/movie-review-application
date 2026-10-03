@@ -23,7 +23,7 @@ function MovieDetails() {
       })
       .then(data => {
 
-        if (!data) {
+        if (!data || typeof data !== 'object') {
           throw new Error('Movie not found')
         }
 
@@ -37,6 +37,9 @@ function MovieDetails() {
 
   }, [imdbId])
 
+  const genres = Array.isArray(movie?.genres) ? movie.genres : []
+  const backdrops = Array.isArray(movie?.backdrops) ? movie.backdrops : []
+
   return (
     <main>
 
@@ -49,11 +52,11 @@ function MovieDetails() {
 
           {/* Large Movie Backdrop */}
 
-          {movie.backdrops && movie.backdrops.length > 0 && (
+          {backdrops.length > 0 && (
             <div className="movie-backdrop">
 
               <img
-                src={movie.backdrops[0]}
+                src={backdrops[0]}
                 alt={movie.title}
               />
 
@@ -66,33 +69,43 @@ function MovieDetails() {
 
             <div className="movie-details-poster">
 
-              <img
-                src={movie.poster}
-                alt={movie.title}
-              />
+              {movie.poster ? (
+                <img
+                  src={movie.poster}
+                  alt={movie.title}
+                />
+              ) : (
+                <div className="movie-details-poster-placeholder">
+                  Poster unavailable
+                </div>
+              )}
 
             </div>
 
             <div className="movie-details-info">
 
-              <h1>{movie.title}</h1>
+              <h1>{movie.title || 'Untitled movie'}</h1>
 
               <p>
-                <strong>Release Date:</strong> {movie.releaseDate}
+                <strong>Release Date:</strong> {movie.releaseDate || 'Unavailable'}
               </p>
 
               <p>
-                <strong>Genres:</strong> {movie.genres.join(', ')}
+                <strong>Genres:</strong> {genres.length > 0 ? genres.join(', ') : 'Unavailable'}
               </p>
 
-              <a
-                className="trailer-button"
-                href={movie.trailerLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ▶ Watch Trailer
-              </a>
+              {movie.trailerLink ? (
+                <a
+                  className="trailer-button"
+                  href={movie.trailerLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ▶ Watch Trailer
+                </a>
+              ) : (
+                <p>Trailer unavailable.</p>
+              )}
 
             </div>
 
@@ -100,14 +113,14 @@ function MovieDetails() {
 
           {/* Backdrop Gallery */}
 
-          {movie.backdrops && movie.backdrops.length > 0 && (
+          {backdrops.length > 0 && (
             <div className="backdrop-gallery">
 
               <h2>Scenes</h2>
 
               <div className="backdrop-grid">
 
-                {movie.backdrops.map((backdrop, index) => (
+                {backdrops.map((backdrop, index) => (
                   <img
                     key={index}
                     src={backdrop}
@@ -123,6 +136,7 @@ function MovieDetails() {
           {/* Reviews */}
 
           <Reviews
+            key={imdbId}
             imdbId={imdbId}
             reviewIds={movie.reviewIds}
           />
