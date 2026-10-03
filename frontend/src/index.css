@@ -38,11 +38,13 @@ button {
   max-width: 300px;
 }
 .movie-card {
-  width: 220px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 262px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  margin: 15px;
+  margin: 0;
   background-color: white;
 }
 
@@ -61,11 +63,12 @@ button {
   margin: 10px 15px;
 }
 .movie-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 262px), 262px));
   gap: 20px;
 }
 .movie-details {
+  box-sizing: border-box;
   display: flex;
   gap: 40px;
   max-width: 1000px;
@@ -74,7 +77,9 @@ button {
 }
 
 .movie-details-poster img {
-  width: 300px;
+  display: block;
+  width: min(300px, 100%);
+  height: auto;
   border-radius: 8px;
 }
 
@@ -147,6 +152,39 @@ button {
   height: 180px;
   object-fit: cover;
   border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 18px 24px;
+  }
+
+  main {
+    padding: 32px 24px;
+  }
+
+  .movie-details {
+    gap: 24px;
+    margin: 32px auto;
+    padding: 0;
+  }
+
+  .movie-backdrop {
+    height: 300px;
+  }
+
+  .backdrop-gallery {
+    margin: 32px auto;
+    padding: 0;
+  }
+
+  .backdrop-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reviews {
+    margin: 32px auto;
+  }
 }
 
 /* Reviews Section */
@@ -359,4 +397,60 @@ button {
 
 .movie-sort select:focus {
   border-color: #111;
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  main {
+    padding: 24px 20px;
+  }
+
+  .movie-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-card {
+    max-width: none;
+  }
+
+  .movie-filter,
+  .movie-sort {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .movie-filter select,
+  .movie-sort select {
+    width: 100%;
+  }
+
+  .movie-details {
+    margin: 24px auto;
+    padding: 0;
+  }
+
+  .movie-details-info h1 {
+    font-size: 30px;
+    overflow-wrap: anywhere;
+  }
+
+  .movie-backdrop {
+    height: 220px;
+    margin-bottom: 24px;
+  }
+
+  .backdrop-gallery {
+    margin: 24px auto;
+  }
+
+  .backdrop-grid {
+    grid-template-columns: 1fr;
+  }
 }
