@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import MovieCard from './MovieCard'
 
+function getMovieTitle(movie) {
+  return typeof movie.title === 'string' ? movie.title : ''
+}
+
 function Home() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(true)
@@ -10,10 +14,13 @@ function Home() {
   const [sortOption, setSortOption] = useState('default')
 
   useEffect(() => {
+    const controller = new AbortController()
+
     const getData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:8080/api/v1/movies'
+          'http://localhost:8080/api/v1/movies',
+          { signal: controller.signal }
         )
 
         if (!response.ok) {
@@ -26,20 +33,28 @@ function Home() {
           throw new Error('Invalid movie data received')
         }
 
-        setMovies(data)
+        setMovies(
+          data.filter((movie) => movie && typeof movie === 'object')
+        )
         setLoading(false)
       } catch (error) {
+        if (error.name === 'AbortError') {
+          return
+        }
+
         setError(error.message)
         setLoading(false)
       }
     }
 
     getData()
+
+    return () => controller.abort()
   }, [])
 
   // Search and genre filtering
   const filteredMovies = movies.filter((movie) => {
-    const title = typeof movie.title === 'string' ? movie.title : ''
+    const title = getMovieTitle(movie)
     const genres = Array.isArray(movie.genres) ? movie.genres : []
     const matchesSearch = title
       .toLowerCase()
@@ -56,10 +71,10 @@ function Home() {
   const sortedMovies = [...filteredMovies].sort((a, b) => {
     switch (sortOption) {
       case 'title-asc':
-        return (a.title || '').localeCompare(b.title || '')
+        return getMovieTitle(a).localeCompare(getMovieTitle(b))
 
       case 'title-desc':
-        return (b.title || '').localeCompare(a.title || '')
+        return getMovieTitle(b).localeCompare(getMovieTitle(a))
 
       case 'date-newest':
         return new Date(b.releaseDate) - new Date(a.releaseDate)
@@ -135,9 +150,9 @@ function Home() {
 
       <div className="movie-grid">
         {sortedMovies.length > 0 ? (
-          sortedMovies.map((movie) => (
+          sortedMovies.map((movie, index) => (
             <MovieCard
-              key={movie.imdbId || movie.id}
+              key={movie.imdbId || movie.id || `movie-${index}`}
               movie={movie}
             />
           ))

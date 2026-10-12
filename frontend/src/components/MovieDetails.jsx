@@ -11,8 +11,11 @@ function MovieDetails() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const controller = new AbortController()
 
-    fetch(`http://localhost:8080/api/v1/movies/${imdbId}`)
+    fetch(`http://localhost:8080/api/v1/movies/${imdbId}`, {
+      signal: controller.signal
+    })
       .then(response => {
 
         if (!response.ok) {
@@ -31,14 +34,24 @@ function MovieDetails() {
         setLoading(false)
       })
       .catch(error => {
+        if (error.name === 'AbortError') {
+          return
+        }
+
         setError(error.message)
         setLoading(false)
       })
 
+    return () => controller.abort()
   }, [imdbId])
 
+  const title = movie?.title || 'Untitled movie'
   const genres = Array.isArray(movie?.genres) ? movie.genres : []
-  const backdrops = Array.isArray(movie?.backdrops) ? movie.backdrops : []
+  const backdrops = Array.isArray(movie?.backdrops)
+    ? movie.backdrops.filter(
+      (backdrop) => typeof backdrop === 'string' && backdrop.trim()
+    )
+    : []
 
   return (
     <main>
@@ -57,7 +70,7 @@ function MovieDetails() {
 
               <img
                 src={backdrops[0]}
-                alt={movie.title}
+                alt={title}
               />
 
             </div>
@@ -72,7 +85,7 @@ function MovieDetails() {
               {movie.poster ? (
                 <img
                   src={movie.poster}
-                  alt={movie.title}
+                  alt={title}
                 />
               ) : (
                 <div className="movie-details-poster-placeholder">
@@ -84,7 +97,7 @@ function MovieDetails() {
 
             <div className="movie-details-info">
 
-              <h1>{movie.title || 'Untitled movie'}</h1>
+              <h1>{title}</h1>
 
               <p>
                 <strong>Release Date:</strong> {movie.releaseDate || 'Unavailable'}
@@ -124,7 +137,7 @@ function MovieDetails() {
                   <img
                     key={index}
                     src={backdrop}
-                    alt={`${movie.title} scene ${index + 1}`}
+                    alt={`${title} scene ${index + 1}`}
                   />
                 ))}
 

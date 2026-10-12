@@ -3,21 +3,26 @@ import { Link } from 'react-router-dom'
 function MovieCard({ movie }) {
   const title = movie.title || 'Untitled movie'
   const genres = Array.isArray(movie.genres) ? movie.genres : []
+  const poster = movie.poster ? (
+    <img
+      src={movie.poster}
+      alt={title}
+    />
+  ) : (
+    <div className="movie-card-poster-placeholder">
+      Poster unavailable
+    </div>
+  )
 
   return (
     <div className="movie-card">
-      <Link to={`/movies/${movie.imdbId}`}>
-        {movie.poster ? (
-          <img
-            src={movie.poster}
-            alt={title}
-          />
-        ) : (
-          <div className="movie-card-poster-placeholder">
-            Poster unavailable
-          </div>
-        )}
-      </Link>
+      {movie.imdbId ? (
+        <Link to={`/movies/${movie.imdbId}`}>
+          {poster}
+        </Link>
+      ) : (
+        poster
+      )}
 
       <h2>{title}</h2>
 

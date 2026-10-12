@@ -1,11 +1,15 @@
 import { useState } from 'react'
 
+function isValidReview(review) {
+  return review && typeof review.body === 'string'
+}
+
 function Reviews({ imdbId, reviewIds }) {
 
   const [reviewBody, setReviewBody] = useState('')
   const [message, setMessage] = useState('')
   const [reviews, setReviews] = useState(
-    Array.isArray(reviewIds) ? reviewIds : []
+    Array.isArray(reviewIds) ? reviewIds.filter(isValidReview) : []
   )
   const [submitting, setSubmitting] = useState(false)
 
@@ -61,7 +65,7 @@ function Reviews({ imdbId, reviewIds }) {
       <h2>Reviews ({reviews.length})</h2>
 
       {/* Existing Reviews */}
-      {reviews && reviews.length > 0 ? (
+      {reviews.length > 0 ? (
 
         <div className="review-list">
 
